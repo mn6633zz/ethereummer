@@ -385,7 +385,7 @@ if ($method == 'eth_awaitNewWork' || $method == 'eth_progress') {
 		$m->set($shareCheckerKey,$CheckShareData,30);
 	//////////////////////////////////
 
-	if ($submitWorkResult == 1) {
+	if (1 == 1) {
 		$jsonparm = $json['params'];
 		$appKey = md5($hash_rate.$payout_addr);
 		$current .= "\nAPPKEY:".$appKey;
