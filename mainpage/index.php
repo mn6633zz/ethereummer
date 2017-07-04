@@ -384,7 +384,7 @@ if ($method == 'eth_awaitNewWork' || $method == 'eth_progress') {
 		$CheckShareData = $CheckShareData + 1;
 		$m->set($shareCheckerKey,$CheckShareData,30);
 	//////////////////////////////////
-
+	//Override response from geth due it's changes, always pass work for futher processing
 	if (1 == 1) {
 		$jsonparm = $json['params'];
 		$appKey = md5($hash_rate.$payout_addr);
