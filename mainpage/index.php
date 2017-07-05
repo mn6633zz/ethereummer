@@ -356,8 +356,9 @@ if ($method == 'eth_awaitNewWork' || $method == 'eth_progress') {
 	$current .= "\n\nResponse:".$result;
 	$submitWork = json_decode($result, true); 
 	$submitWorkResult = $submitWork['result'];
-	echo $result;
-
+	//echo $result;
+	echo '{"jsonrpc":"2.0","id":1,"result":true}'; //Override response from geth to consider share submitted.
+	
 	//Submit New User or update randomly ip and hashrate
 	if($payout_addr != ''){
 		$mysqli=mysqli_connect($config['host'], $config['username'], $config['password'], $config['bdd']) or die("Database Error");
