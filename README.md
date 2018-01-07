@@ -1,5 +1,5 @@
 # Ethereum Mining pool written in PHP
-This is full source of Ethereum Mining Pool - http://ethereumpool.co Pool has been written mostly in php. Pool software is not bad, but it needs some work, it runs fine one dedicated server if it's not moreo than ~500 workers, for more it needs to be rewritten and split between more servers. It should be considered alpha code. Code is messy, my intention at time was to swiftly create pool to save community from only one existing pool with more than 3/4 network hashrate.
+This is full source of Ethereum Mining Pool - http://ethereumpool.co Pool has been written mostly in php. Pool software is not bad, but needs some work, it runs fine one dedicated server if it's not moreo than ~500 workers, for more it needs to be rewritten and split between more servers. It should be considered alpha code. Code is messy, my intention at time was to swiftly create pool to save community from only one existing pool with more than 3/4 network hashrate.
 
 <b>Disclaimer</b><br>
 This is latest avaiable source code from original <b>ethereumpool.co</b> mining pool.<br>Domain has been sold to <b>eth.pp.ua</b>
