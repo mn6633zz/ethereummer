@@ -27,7 +27,7 @@ Setup nginx server blocks:
 </pre>
 Setup phpmyadmin with ssl, etc..<br>
 Now move files <pre>nonce_fast.py and nonce.py</pre> from 'misc' directory to <pre>/root/pyethereum/ethereum/ (main directory of Pyethereum)</pre><br>
-To maximize performance tweak configurations of memcached,mariadb,nginx,hhvm and kernel but it's not necessary to start pool.<br>
+To maximize performance, tweak configurations of memcached,mariadb,nginx,hhvm and kernel but it's not necessary to start pool.<br>
 
 # Start Pool
 <pre>screen -dmS geth geth --rpcaddr 127.0.0.1 --rpcport 8983 --rpc --unlock Address</pre>
@@ -35,7 +35,7 @@ To maximize performance tweak configurations of memcached,mariadb,nginx,hhvm and
 Now start background scripts:<br>
 Get work from geth json and cache it with memcached
 <pre>screen -dmS process_work php /var/www4/block_processing/process_work/index.php</pre>
-<br>Block Processing - this script handle block splitting and Proof of Work verification
+<br>Block Processing - this script handle block splitting and proof of work verification
 <pre>screen -dmS block_processing php /var/www4/block_processing/index.php</pre>
 <br>This script updates data to calculate predicted mining rewards
 <pre>screen -dmS update_calculator php /var/www4/block_processing/update_calculator/index.php</pre>
