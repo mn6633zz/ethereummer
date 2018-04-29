@@ -281,6 +281,7 @@ echo '<!DOCTYPE html>
   transform: translateX(50%);
 }
 </style>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head> 
 <body class="blog-home-page">   
     <div class="header-wrapper header-wrapper-blog-home">
@@ -327,7 +328,7 @@ echo '<!DOCTYPE html>
                        ';                                                                                
 
 echo '<center><a href="/stats/miner/?address='.$miner.'"><div class="button-fill grey" style="width:94%"><div class="button-text">'.$miner.'</b></div><div class="button-inside"><div class="inside-text">'.$miner.'</div></div></div></a>';
-echo '</center><br><div id="container"><center>Loading chart...</center></div>';
+echo '</center><br><div id="container"></div>';
 
 
 
@@ -397,10 +398,7 @@ echo '</center><br><div id="container"><center>Loading chart...</center></div>';
     <!-- Form iOS fix -->
     <script  type="text/javascript" src="http://ethereumpool.co/assets/plugins/isMobile/isMobile.min.js"></script>
     <script  type="text/javascript" src="http://ethereumpool.co/assets/js/form-mobile-fix.js"></script>     
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-    <script src="http://ethereumpool.co/charts/js/highstock.js"></script>
-    <script src="http://ethereumpool.co/charts/js/modules/exporting.js"></script> 
-    
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>    
             <script>
         $(".button-fill").hover(function () {
         $(this).children(".button-inside").addClass("full");
@@ -409,95 +407,79 @@ echo '</center><br><div id="container"><center>Loading chart...</center></div>';
         });
     </script>
     <script type="text/javascript">
-$(function () {
-    $.getJSON("/api/get/data/index.php?data=worker_hashrate&range=max&dtx='.$miner.'&wrk='.$worker.'", function (data) {'; ?>
-
-
-
-        $("#container").highcharts("StockChart", {
-            rangeSelector: {
-            buttons: [{
-                type: 'hour',
+Plotly.d3.json("/api/get/data/index.php?data=worker_hashrate&range=max&dtx='.$miner.'&wrk='.$worker.'", function(err, rows){
+    var trace1 = {
+        type: "scatter",
+        mode: "lines",
+        name: "Hashrate",
+        x: [],
+        y: [],
+        line: {color: "#17BECF"}
+    }
+    for (var i=0; i<rows.length; i++) {
+        var row = rows[i];
+        trace1.x.push(row[0]);
+        trace1.y.push(row[1]);
+    }
+    var data = [trace1];
+    var layout = {
+        title: "Hashrate",
+        plot_bgcolor: "rgba(124, 1, 1, 0)",
+        paper_bgcolor: "rgba(125,1,1,0)",
+        xaxis: {
+            autorange: true,
+            rangeselector: {buttons: [{
                 count: 1,
-                text: '1h'
+                label: "1h",
+                step: "hour",
+                stepmode: "backward"
             },{
-                type: 'hour',
                 count: 12,
-                text: '12h'
+                label: "12h",
+                step: "hour",
+                stepmode: "backward"
             },{
-                type: 'day',
                 count: 1,
-                text: '1d'
-            }, {
-                type: 'week',
+                label: "1d",
+                step: "day",
+                stepmode: "backward"
+            },{
+                count: 3,
+                label: "3d",
+                step: "day",
+                stepmode: "backward",
+            },{
                 count: 1,
-                text: '1w'
-            }, {
-                type: 'month',
+                label: "1w",
+                step: "week",
+                stepmode: "backward"
+            },{
                 count: 1,
-                text: '1m'
-            }, {
-                type: 'month',
+                label: "1m",
+                step: "month",
+                stepmode: "backward"
+            },{
                 count: 6,
-                text: '6m'
-            }, {
-                type: 'year',
+                label: "6m",
+                step: "month",
+                stepmode: "backward"
+            },{
                 count: 1,
-                text: '1y'
-            }, {
-                type: 'all',
-                text: 'All'
-            }],
-            selected: 1
+                label: "1y",
+                step: "year",
+                stepmode: "backward"
+            },{
+                step: "all"
+            }]},
+            rangeslider: {},type: "date"
         },
-            chart: {
-                backgroundColor: "#F5F5F5",
-                polar: true,
-                type: "area"
-            },
-            title : {
-                text : ""
-            },
-
-            yAxis: {
-                reversed: false,
-                showFirstLabel: false,
-                showLastLabel: true
-            },
-
-            series : [{
-                name : "Hashrate MH/s",
-                data : data,
-                threshold: null,
-                fillColor : {
-                    linearGradient : {
-                        x1: 0,
-                        y1: 1,
-                        x2: 0,
-                        y2: 0
-                    },
-                    stops : [
-                        [0, Highcharts.getOptions().colors[0]],
-                        [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                    ]
-                },
-                tooltip: {
-                    valueDecimals: 2
-                }
-            }]
-        });
-    });
-
+        yaxis: {
+            autorange: true,
+            type: "linear"
+        }
+    };
+    Plotly.newPlot("container", data, layout);
 });
-
-function zip(a, b) {
-    return a.map(function(x, i) {
-    return [x, b[i]];
-    });
-}
 </script>
-
-
-
 </body>
 </html> 

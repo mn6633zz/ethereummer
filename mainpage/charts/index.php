@@ -32,6 +32,7 @@ echo '<!DOCTYPE html>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head> 
 
 
@@ -78,10 +79,10 @@ echo '<!DOCTYPE html>
                 <div class="row text-left">
                     <div class="contact-form-inner col-md-8 col-sm-12 col-xs-12 col-md-offset-2 col-sm-offset-0 xs-offset-0">
                         <div class="row"> ';
-                        echo '<div id="container"><center>Loading hashrate chart...</center></div>';
-                        echo '<br><br><div id="container_balance"><center>Loading balance chart...</center></div><br><br>';
-                        echo '<br><br><div id="container_miners"><center>Loading miners chart...</center></div><br><br>';
-                        echo '<br><br><div id="container_workers"><center>Loading workers chart...</center></div><br><br>';
+                        echo '<div id="container"></div>';
+                        echo '<br><br><div id="container_balance"></div><br><br>';
+                        echo '<br><br><div id="container_miners"></div><br><br>';
+                        echo '<br><br><div id="container_workers"></div><br><br>';
                         echo '</div><!--//row-->
                     </div>
                 </div><!--//row-->
@@ -149,353 +150,300 @@ echo '<!DOCTYPE html>
     <script  type="text/javascript" src="../assets/js/form-mobile-fix.js"></script>
     
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-    <script src="./js/highstock.js"></script>
-    <script src="./js/modules/exporting.js"></script> 
     '; ?>
     <script type="text/javascript">
-$(function () {
-    $.getJSON("/api/get/data/index.php?data=hashrate&range=max", function (data) {
-        $("#container").highcharts("StockChart", {
-            rangeSelector: {
-            buttons: [{
-                type: 'hour',
+Plotly.d3.json("/api/get/data/index.php?data=hashrate&range=max", function(err, rows){
+    var trace1 = {
+        type: "scatter",
+        mode: "lines",
+        name: 'Hashrate',
+        x: [],
+        y: [],
+        line: {color: '#17BECF'}
+    }
+    for (var i=0; i<rows.length; i++) {
+        var row = rows[i];
+        trace1.x.push(row[0]);
+        trace1.y.push(row[1]);
+    }
+    var data = [trace1];
+    var layout = {
+        title: 'Hashrate',
+        plot_bgcolor: 'rgba(124, 1, 1, 0)',
+        paper_bgcolor: 'rgba(125,1,1,0)',
+        xaxis: {
+            autorange: true,
+            rangeselector: {buttons: [{
                 count: 1,
-                text: '1h'
+                label: '1h',
+                step: 'hour',
+                stepmode: 'backward'
             },{
-                type: 'hour',
                 count: 12,
-                text: '12h'
+                label: '12h',
+                step: 'hour',
+                stepmode: 'backward'
             },{
-                type: 'day',
                 count: 1,
-                text: '1d'
+                label: '1d',
+                step: 'day',
+                stepmode: 'backward'
             },{
-                type: 'day',
                 count: 3,
-                text: '3d'
-            }, {
-                type: 'week',
+                label: '3d',
+                step: 'day',
+                stepmode: 'backward',
+            },{
                 count: 1,
-                text: '1w'
-            }, {
-                type: 'month',
+                label: '1w',
+                step: 'week',
+                stepmode: 'backward'
+            },{
                 count: 1,
-                text: '1m'
-            }, {
-                type: 'month',
+                label: '1m',
+                step: 'month',
+                stepmode: 'backward'
+            },{
                 count: 6,
-                text: '6m'
-            }, {
-                type: 'year',
+                label: '6m',
+                step: 'month',
+                stepmode: 'backward'
+            },{
                 count: 1,
-                text: '1y'
-            }, {
-                type: 'all',
-                text: 'All'
-            }],
-            selected: 3
+                label: '1y',
+                step: 'year',
+                stepmode: 'backward'
+            },{
+                step: 'all'
+            }]},
+            rangeslider: {},type: 'date'
         },
-            chart: {
-                backgroundColor: "#F5F5F5",
-                polar: true,
-                type: "area"
-            },
-            title : {
-                text : "Hashrate"
-            },
-
-            yAxis: {
-                reversed: false,
-                showFirstLabel: false,
-                showLastLabel: true
-            },
-
-            series : [{
-                name : "Hashrate MH/s",
-                data : data,
-                threshold: null,
-                fillColor : {
-                    linearGradient : {
-                        x1: 0,
-                        y1: 1,
-                        x2: 0,
-                        y2: 0
-                    },
-                    stops : [
-                        [0, Highcharts.getOptions().colors[0]],
-                        [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                    ]
-                },
-                tooltip: {
-                    valueDecimals: 2
-                }
-            }]
-        });
-        setTimeout(balance, 1000);
-    });
+        yaxis: {
+            autorange: true,
+            type: 'linear'
+        }
+    };
+    Plotly.newPlot('container', data, layout);
 });
-
-
-function balance() {
-    $.getJSON("/api/get/data/index.php?data=pool_balance&range=max", function (data) {
-        $("#container_balance").highcharts("StockChart", {
-            rangeSelector: {
-            buttons: [{
-                type: 'hour',
+Plotly.d3.json("/api/get/data/index.php?data=pool_balance&range=max", function(err, rows){
+    var trace1 = {
+        type: "scatter",
+        mode: "lines",
+        name: 'Balance',
+        x: [],
+        y: [],
+        line: {color: '#17BECF'}
+    }
+    for (var i=0; i<rows.length; i++) {
+        var row = rows[i];
+        trace1.x.push(row[0]);
+        trace1.y.push(row[1]);
+    }
+    var data = [trace1];
+    var layout = {
+        title: 'Balance',
+        plot_bgcolor: 'rgba(124, 1, 1, 0)',
+        paper_bgcolor: 'rgba(125,1,1,0)',
+        xaxis: {
+            autorange: true,
+            rangeselector: {buttons: [{
                 count: 1,
-                text: '1h'
+                label: '1h',
+                step: 'hour',
+                stepmode: 'backward'
             },{
-                type: 'hour',
                 count: 12,
-                text: '12h'
+                label: '12h',
+                step: 'hour',
+                stepmode: 'backward'
             },{
-                type: 'day',
                 count: 1,
-                text: '1d'
+                label: '1d',
+                step: 'day',
+                stepmode: 'backward'
             },{
-                type: 'day',
                 count: 3,
-                text: '3d'
-            }, {
-                type: 'week',
-                count: 1,
-                text: '1w'
-            }, {
-                type: 'month',
-                count: 1,
-                text: '1m'
-            }, {
-                type: 'month',
-                count: 6,
-                text: '6m'
-            }, {
-                type: 'year',
-                count: 1,
-                text: '1y'
-            }, {
-                type: 'all',
-                text: 'All'
-            }],
-            selected: 3
-        },
-            chart: {
-                backgroundColor: "#F5F5F5",
-                polar: true,
-                type: "area"
-            },
-            title : {
-                text : "Balance"
-            },
-
-            yAxis: {
-                reversed: false,
-                showFirstLabel: false,
-                showLastLabel: true
-            },
-
-            series : [{
-                name : "balance ETHERS",
-                data : data,
-                threshold: null,
-                fillColor : {
-                    linearGradient : {
-                        x1: 0,
-                        y1: 1,
-                        x2: 0,
-                        y2: 0
-                    },
-                    stops : [
-                        [0, Highcharts.getOptions().colors[0]],
-                        [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                    ]
-                },
-                tooltip: {
-                    valueDecimals: 2
-                }
-            }]
-        });
-        setTimeout(miners, 1000);
-    });
-
-};
-
-function miners() {
-    $.getJSON("/api/get/data/index.php?data=pool_miners&range=max", function (data) {
-        $("#container_miners").highcharts("StockChart", {
-            rangeSelector: {
-            buttons: [{
-                type: 'hour',
-                count: 1,
-                text: '1h'
+                label: '3d',
+                step: 'day',
+                stepmode: 'backward',
             },{
-                type: 'hour',
+                count: 1,
+                label: '1w',
+                step: 'week',
+                stepmode: 'backward'
+            },{
+                count: 1,
+                label: '1m',
+                step: 'month',
+                stepmode: 'backward'
+            },{
+                count: 6,
+                label: '6m',
+                step: 'month',
+                stepmode: 'backward'
+            },{
+                count: 1,
+                label: '1y',
+                step: 'year',
+                stepmode: 'backward'
+            },{
+                step: 'all'
+            }]},
+            rangeslider: {},type: 'date'
+        },
+        yaxis: {
+            autorange: true,
+            type: 'linear'
+        }
+    };
+    Plotly.newPlot('container_balance', data, layout);
+});
+Plotly.d3.json("/api/get/data/index.php?data=pool_miners&range=max", function(err, rows){
+    var trace1 = {
+        type: "scatter",
+        mode: "lines",
+        name: 'Active Miners',
+        x: [],
+        y: [],
+        line: {color: '#17BECF'}
+    }
+    for (var i=0; i<rows.length; i++) {
+        var row = rows[i];
+        trace1.x.push(row[0]);
+        trace1.y.push(row[1]);
+    }
+    var data = [trace1];
+    var layout = {
+        title: 'Active Miners',
+        plot_bgcolor: 'rgba(124, 1, 1, 0)',
+        paper_bgcolor: 'rgba(125,1,1,0)',
+        xaxis: {
+            autorange: true,
+            rangeselector: {buttons: [{
+                count: 1,
+                label: '1h',
+                step: 'hour',
+                stepmode: 'backward'
+            },{
                 count: 12,
-                text: '12h'
+                label: '12h',
+                step: 'hour',
+                stepmode: 'backward'
             },{
-                type: 'day',
                 count: 1,
-                text: '1d'
+                label: '1d',
+                step: 'day',
+                stepmode: 'backward'
             },{
-                type: 'day',
                 count: 3,
-                text: '3d'
-            }, {
-                type: 'week',
-                count: 1,
-                text: '1w'
-            }, {
-                type: 'month',
-                count: 1,
-                text: '1m'
-            }, {
-                type: 'month',
-                count: 6,
-                text: '6m'
-            }, {
-                type: 'year',
-                count: 1,
-                text: '1y'
-            }, {
-                type: 'all',
-                text: 'All'
-            }],
-            selected: 3
-        },
-            chart: {
-                backgroundColor: "#F5F5F5",
-                polar: true,
-                type: "area"
-            },
-            title : {
-                text : "Active Miners"
-            },
-
-            yAxis: {
-                reversed: false,
-                showFirstLabel: false,
-                showLastLabel: true
-            },
-
-            series : [{
-                name : "miners count",
-                data : data,
-                threshold: null,
-                fillColor : {
-                    linearGradient : {
-                        x1: 0,
-                        y1: 1,
-                        x2: 0,
-                        y2: 0
-                    },
-                    stops : [
-                        [0, Highcharts.getOptions().colors[0]],
-                        [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                    ]
-                },
-                tooltip: {
-                    valueDecimals: 2
-                }
-            }]
-        });
-        setTimeout(workers, 1000);
-    });
-
-};
-
-function workers() {
-    $.getJSON("/api/get/data/index.php?data=pool_workers&range=max", function (data) {
-
-
-
-        $("#container_workers").highcharts("StockChart", {
-            rangeSelector: {
-            buttons: [{
-                type: 'hour',
-                count: 1,
-                text: '1h'
+                label: '3d',
+                step: 'day',
+                stepmode: 'backward',
             },{
-                type: 'hour',
+                count: 1,
+                label: '1w',
+                step: 'week',
+                stepmode: 'backward'
+            },{
+                count: 1,
+                label: '1m',
+                step: 'month',
+                stepmode: 'backward'
+            },{
+                count: 6,
+                label: '6m',
+                step: 'month',
+                stepmode: 'backward'
+            },{
+                count: 1,
+                label: '1y',
+                step: 'year',
+                stepmode: 'backward'
+            },{
+                step: 'all'
+            }]},
+            rangeslider: {},type: 'date'
+        },
+        yaxis: {
+            autorange: true,
+            type: 'linear'
+        }
+    };
+    Plotly.newPlot('container_miners', data, layout);
+});
+Plotly.d3.json("/api/get/data/index.php?data=pool_workers&range=max", function(err, rows){
+    var trace1 = {
+        type: "scatter",
+        mode: "lines",
+        name: 'Active Workers',
+        x: [],
+        y: [],
+        line: {color: '#17BECF'}
+    }
+    for (var i=0; i<rows.length; i++) {
+        var row = rows[i];
+        trace1.x.push(row[0]);
+        trace1.y.push(row[1]);
+    }
+    var data = [trace1];
+    var layout = {
+        title: 'Active Workers',
+        plot_bgcolor: 'rgba(124, 1, 1, 0)',
+        paper_bgcolor: 'rgba(125,1,1,0)',
+        xaxis: {
+            autorange: true,
+            rangeselector: {buttons: [{
+                count: 1,
+                label: '1h',
+                step: 'hour',
+                stepmode: 'backward'
+            },{
                 count: 12,
-                text: '12h'
+                label: '12h',
+                step: 'hour',
+                stepmode: 'backward'
             },{
-                type: 'day',
                 count: 1,
-                text: '1d'
+                label: '1d',
+                step: 'day',
+                stepmode: 'backward'
             },{
-                type: 'day',
                 count: 3,
-                text: '3d'
-            }, {
-                type: 'week',
+                label: '3d',
+                step: 'day',
+                stepmode: 'backward',
+            },{
                 count: 1,
-                text: '1w'
-            }, {
-                type: 'month',
+                label: '1w',
+                step: 'week',
+                stepmode: 'backward'
+            },{
                 count: 1,
-                text: '1m'
-            }, {
-                type: 'month',
+                label: '1m',
+                step: 'month',
+                stepmode: 'backward'
+            },{
                 count: 6,
-                text: '6m'
-            }, {
-                type: 'year',
+                label: '6m',
+                step: 'month',
+                stepmode: 'backward'
+            },{
                 count: 1,
-                text: '1y'
-            }, {
-                type: 'all',
-                text: 'All'
-            }],
-            selected: 3
+                label: '1y',
+                step: 'year',
+                stepmode: 'backward'
+            },{
+                step: 'all'
+            }]},
+            rangeslider: {},type: 'date'
         },
-            chart: {
-                backgroundColor: "#F5F5F5",
-                polar: true,
-                type: "area"
-            },
-            title : {
-                text : "Active Workers"
-            },
-
-            yAxis: {
-                reversed: false,
-                showFirstLabel: false,
-                showLastLabel: true
-            },
-
-            series : [{
-                name : "workers count",
-                data : data,
-                threshold: null,
-                fillColor : {
-                    linearGradient : {
-                        x1: 0,
-                        y1: 1,
-                        x2: 0,
-                        y2: 0
-                    },
-                    stops : [
-                        [0, Highcharts.getOptions().colors[0]],
-                        [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                    ]
-                },
-                tooltip: {
-                    valueDecimals: 2
-                }
-            }]
-        });
-    });
-
-};
-
-function zip(a, b) {
-    return a.map(function(x, i) {
-    return [x, b[i]];
-    });
-}
+        yaxis: {
+            autorange: true,
+            type: 'linear'
+        }
+    };
+    Plotly.newPlot('container_workers', data, layout);
+});
 </script>
-
-
-
 </body>
 </html> 
-

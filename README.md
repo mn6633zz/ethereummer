@@ -12,9 +12,6 @@ Recommended <a href="https://github.com/facebook/hhvmHHVM" target="_blank">HHVM<
 <a href="http://nginx.org" target="_blank">Nginx</a><br>
 <a href="https://github.com/ethereum/pyethereum" target="_blank">Pyethereum</a><br>
 <a href="https://github.com/ethereum/go-ethereum" target="_blank">Geth</a><br>
-<a href="http://www.highcharts.com" target="_blank">Highcharts (included in project)</a><br>
- 
-
 
 # Setup on Linux
 Install all software mentioned above.<br>
@@ -76,5 +73,5 @@ If you want to contribute, fork and pull request or open issue.
 
 
 # License
-php,python and some js,css,html code is under The MIT License (MIT)<br>
+php,python and some js,css,html code is under The MIT License (MIT) including charting library Plotly.js <br>
 Front end template is [paid](http://themes.3rdwavemedia.com/website-templates/responsive-bootstrap-theme-web-development-agencies-devstudio) (sorry, at first it wasn't meant to be open sourced thus i just picked paid template)
